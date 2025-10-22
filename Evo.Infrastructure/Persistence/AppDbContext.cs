@@ -14,6 +14,8 @@ namespace Evo.Infrastructure.Persistence
         public DbSet<User> Users => Set<User>();
         public DbSet<Customer> Customers => Set<Customer>();
 
+        public DbSet<ServiceProvider> ServiceProviders => Set<ServiceProvider>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
