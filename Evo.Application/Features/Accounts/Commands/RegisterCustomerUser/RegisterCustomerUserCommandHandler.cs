@@ -41,10 +41,10 @@ namespace Evo.Application.Features.Accounts.Commands.RegisterCustomerUser
                 var customerEventDto = _mapper.Map<CustomerUserRegisteredDto>(request.RegisterCustomerUserDto);
                 customerEventDto.UserId = user.Id;
 
-                await _mediator.Publish(new CustomerUserRegisteredEvent(customerEventDto), cancellationToken);
+               
 
-
-
+                var customer = _mapper.Map<Customer>(customerEventDto);
+                await _unitOfWork.Customers.AddAsync(customer);
 
 
 
