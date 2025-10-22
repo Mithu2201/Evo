@@ -13,6 +13,8 @@ namespace Evo.Infrastructure.Persistence
     {
         public DbSet<User> Users => Set<User>();
         public DbSet<Customer> Customers => Set<Customer>();
+        public DbSet<Staff> Staffs => Set<Staff>();
+        public DbSet<Admin> Admins => Set<Admin>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
