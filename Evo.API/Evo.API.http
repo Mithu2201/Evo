@@ -1,0 +1,6 @@
+@Evo.API_HostAddress = http://localhost:5077
+
+GET {{Evo.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
