@@ -1,6 +1,7 @@
 ﻿using Evo.API.Extensions;
 using Evo.Application.Features.ThirdPartyDrivers.Commands.Create;
 using Evo.Application.Features.ThirdPartyDrivers.Commands.Update;
+using Evo.Application.Features.ThirdPartyDrivers.Commands.Delete;
 using Evo.Application.Features.ThirdPartyDrivers.Dtos;
 using Evo.Application.Features.ThirdPartyDrivers.Queries.GetById;
 using Evo.Application.Features.ThirdPartyDrivers.Queries.List;
@@ -47,6 +48,12 @@ namespace Evo.API.Controllers
             return this.ToApiResponse(true, "Updated");
         }
 
-        
+        [HttpDelete("{driverId:guid}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid driverId, CancellationToken ct)
+        {
+            var ok = await _mediator.Send(new DeleteThirdPartyDriverCommand(driverId), ct);
+            if (!ok) return this.ToErrorResponse("Not found", 404);
+            return this.ToApiResponse(true, "Deleted");
+        }
     }
 }
