@@ -18,41 +18,10 @@ namespace Evo.Application.DTOs
         [DataType(DataType.Password)]
         public string Password { get; set; } = default!;
 
-        // ---- Admin Info ----
-        [Required, MaxLength(150)]
-        public string Name { get; set; } = default!;
-
-        [Required, MaxLength(15)]
-        public string Phone { get; set; } = default!;
-
-        [MaxLength(200)]
-        public string? AddressLine1 { get; set; }
-
-        [MaxLength(200)]
-        public string? AddressLine2 { get; set; }
-
-        [MaxLength(100)]
-        public string? City { get; set; }
-
-        [MaxLength(100)]
-        public string? District { get; set; }
-
-        [MaxLength(20)]
-        public string? PostalCode { get; set; }
-
-        [MaxLength(100)]
-        public string? Country { get; set; }
-
-        [Required]
+        public string UserId { get; set; } = "0";
+        public AccountStatus? Status { get; set; } = AccountStatus.Active;
         public AdminPosition Position { get; set; } = AdminPosition.JuniorAdmin;
 
-        [MaxLength(100)]
-        public string? Department { get; set; }
-
-        // Optional custom fields
-        public string? Permissions { get; set; }
-
-        // ---- Metadata ----
-        public DateTime HireDate { get; set; } = DateTime.UtcNow;
+     
     }
 }

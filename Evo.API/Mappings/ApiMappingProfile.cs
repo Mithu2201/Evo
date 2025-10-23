@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Evo.API.Models.Requests.Accounts;
 using Evo.Application.DTOs;
+using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
 using Evo.Application.Features.Accounts.Commands.RegisterStaffUser;
 using Evo.Application.Features.Accounts.Dtos;
@@ -18,6 +19,7 @@ namespace Evo.API.Mappings
             // It’s needed because the RegisterUserCommand contains a RegisterDto property, so AutoMapper must know how to populate it.
             CreateMap<RegisterCustomerApiRequest, RegisterCustomerUserDto>();
             CreateMap<RegisterStaffApiRequest, RegisterStaffUserDto>();
+            CreateMap<RegisterAdminApiRequest, RegisterAdminUserDto>();
 
 
             // Map API request to Command and fill its RegisterDto property
@@ -28,6 +30,9 @@ namespace Evo.API.Mappings
             
             CreateMap<RegisterStaffApiRequest, RegisterStaffUserCommand>()
                     .ForMember(dest => dest.RegisterStaffUserDto, opt => opt.MapFrom(src => src));
+            
+            CreateMap<RegisterAdminApiRequest, RegisterAdminUserCommand>()
+                    .ForMember(dest => dest.RegisterAdminUserDto, opt => opt.MapFrom(src => src));
 
 
         }

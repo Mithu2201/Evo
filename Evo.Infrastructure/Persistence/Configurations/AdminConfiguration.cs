@@ -1,4 +1,5 @@
 ﻿using Evo.Domain.Entities;
+using Evo.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -6,86 +7,56 @@ namespace Evo.Infrastructure.Persistence.Configurations
 {
     public class AdminConfiguration : IEntityTypeConfiguration<Admin>
     {
+
         public void Configure(EntityTypeBuilder<Admin> builder)
         {
-            // ---- Table ----
             builder.ToTable("Admins");
 
-            // ---- Primary Key ----
+            // Key
             builder.HasKey(a => a.Id);
 
             builder.Property(a => a.Id)
-                   .HasMaxLength(36)
-                   .IsRequired()
-                   .ValueGeneratedNever(); // since you're assigning Guid.NewGuid().ToString()
+                   .HasMaxLength(36)          // "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                   .ValueGeneratedNever();
 
-            // ---- Relationships ----
+            // FKs
             builder.Property(a => a.UserId)
                    .IsRequired()
                    .HasMaxLength(36);
 
-            builder.HasOne(a => a.User)
-                   .WithOne() // or .WithOne(u => u.Admin) if User has navigation
-                   .HasForeignKey<Admin>(a => a.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            // ---- Basic Info ----
-            builder.Property(a => a.Name)
+            builder.Property(a => a.StaffId)
                    .IsRequired()
-                   .HasMaxLength(150);
+                   .HasMaxLength(36);
 
-            builder.Property(a => a.Phone)
-                   .IsRequired()
-                   .HasMaxLength(15)
-                   .IsUnicode(false);
-
-            builder.Property(a => a.Email)
-                   .IsRequired()
-                   .HasMaxLength(100)
-                   .IsUnicode(false);
-
-            // Unique Email per admin
-            builder.HasIndex(a => a.Email)
-                   .IsUnique()
-                   .HasDatabaseName("UX_Admins_Email");
-
-            // ---- Address ----
-            builder.Property(a => a.AddressLine1).HasMaxLength(200);
-            builder.Property(a => a.AddressLine2).HasMaxLength(200);
-            builder.Property(a => a.City).HasMaxLength(100);
-            builder.Property(a => a.District).HasMaxLength(100);
-            builder.Property(a => a.PostalCode).HasMaxLength(20).IsUnicode(false);
-            builder.Property(a => a.Country).HasMaxLength(100);
-
-            // ---- Job / Work ----
-            builder.Property(a => a.Position)
-                   .IsRequired()
-                   .HasConversion<string>()  // store enum as text ("JuniorAdmin", "SeniorAdmin", etc.)
-                   .HasMaxLength(50)
-                   .IsUnicode(false);
-
-            builder.Property(a => a.Department)
-                   .HasMaxLength(100);
-
-            builder.Property(a => a.HireDate)
-                   .HasDefaultValueSql("GETUTCDATE()"); // SQL Server default UTC time
-
-            // ---- Status ----
+            // Enums (store as int) + defaults
             builder.Property(a => a.Status)
-                   .IsRequired()
-                   .HasConversion<string>()  // store as readable text
-                   .HasMaxLength(50)
-                   .IsUnicode(false);
+                   .HasConversion<int>()
+                   .HasDefaultValue(AccountStatus.Active);
 
-            // ---- Permissions ----
-            builder.Property(a => a.Permissions)
-                   .HasColumnType("nvarchar(max)");
+            builder.Property(a => a.Position)
+                   .HasConversion<int>()
+                   .HasDefaultValue(AdminPosition.JuniorAdmin);
 
-            // ---- Constraints ----
-            builder.ToTable(t =>
-            {
-                t.HasCheckConstraint("CK_Admins_Phone_Length", "LEN([Phone]) BETWEEN 7 AND 15");
-            });
+            // ---------- Relationships ----------
+
+            // 1) Admin <-> User : One-to-one with explicit inverse to avoid shadow FK (UserId1)
+            builder.HasOne(a => a.User)
+                   .WithOne(u => u.Admin)                          // IMPORTANT: tie to the correct inverse
+                   .HasForeignKey<Admin>(a => a.UserId)
+                   .HasPrincipalKey<User>(u => u.Id)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            // Make it truly 1:1 at the DB level
+            builder.HasIndex(a => a.UserId).IsUnique();
+
+            // 2) Admin <-> Staff : One-to-one (no inverse navigation on Staff)
+            builder.HasOne(a => a.Staff)
+                   .WithOne()                                      // no Staff.Admin property
+                   .HasForeignKey<Admin>(a => a.StaffId)
+                   .HasPrincipalKey<Staff>(s => s.Id)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(a => a.StaffId).IsUnique();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Evo.API.Extensions;
 using Evo.API.Models.Requests.Accounts;
+using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
 using Evo.Application.Features.Accounts.Commands.RegisterStaffUser;
 using MediatR;
@@ -25,6 +26,15 @@ namespace Evo.API.Controllers
         public async Task<IActionResult> RegisterStaff(RegisterStaffApiRequest request)   //http://localhost:5077/api/account/registerstaff
         {
             var command = _mapper.Map<RegisterStaffUserCommand>(request);
+            var userDto = await _mediator.Send(command);
+
+            // Map UserDto to ApiResponse<UserDto> using extension
+            return this.ToApiResponse(userDto, "User registered successfully");
+        }
+        [HttpPost("registeradmin")]
+        public async Task<IActionResult> RegisterAdmin(RegisterAdminApiRequest request)   //http://localhost:5077/api/account/registeradmin
+        {
+            var command = _mapper.Map<RegisterAdminUserCommand>(request);
             var userDto = await _mediator.Send(command);
 
             // Map UserDto to ApiResponse<UserDto> using extension
