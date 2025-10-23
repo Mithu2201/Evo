@@ -2,11 +2,6 @@
 using Evo.Domain.Entities;
 using Evo.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Evo.Infrastructure.Persistence.Repositories
 {
@@ -23,9 +18,8 @@ namespace Evo.Infrastructure.Persistence.Repositories
 
         public async Task<ThirdPartyDriver?> GetByIdAsync(Guid driverId, bool includeThirdParty = false, CancellationToken ct = default)
         {
-            IQueryable<ThirdPartyDriver> q = _ctx.ThirdPartyDrivers.AsQueryable();
-            if (includeThirdParty) q = q.Include(d => d.ThirdParty);
-            return await q.FirstOrDefaultAsync(d => d.DriverId == driverId, ct);
+            // 'includeThirdParty' ignored after merge; no navigation remains
+            return await _ctx.ThirdPartyDrivers.FirstOrDefaultAsync(d => d.DriverId == driverId, ct);
         }
 
         public async Task UpdateAsync(ThirdPartyDriver entity, CancellationToken ct = default)
@@ -44,7 +38,6 @@ namespace Evo.Infrastructure.Persistence.Repositories
         }
 
         public async Task<IReadOnlyList<ThirdPartyDriver>> ListAsync(
-            Guid? thirdPartyId = null,
             DriverStatus? status = null,
             DriverVerificationStatus? verification = null,
             bool? isAvailable = null,
@@ -52,7 +45,6 @@ namespace Evo.Infrastructure.Persistence.Repositories
         {
             var q = _ctx.ThirdPartyDrivers.AsQueryable();
 
-            if (thirdPartyId is Guid tpId) q = q.Where(d => d.ThirdPartyId == tpId);
             if (status.HasValue) q = q.Where(d => d.Status == status);
             if (verification.HasValue) q = q.Where(d => d.VerificationStatus == verification);
             if (isAvailable.HasValue) q = q.Where(d => d.IsAvailable == isAvailable);

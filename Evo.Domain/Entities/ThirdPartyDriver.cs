@@ -1,11 +1,6 @@
 ﻿using Evo.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Evo.Domain.Entities
 {
@@ -14,11 +9,6 @@ namespace Evo.Domain.Entities
     {
         [Key]
         public Guid DriverId { get; set; } = Guid.NewGuid();
-
-        // Which vendor / supplier this driver belongs to
-        [Required, ForeignKey(nameof(ThirdParty))]
-        public Guid ThirdPartyId { get; set; }
-        public virtual ThirdParty ThirdParty { get; set; } = default!;
 
         // Optional: link to app User (if driver logs in)
         [ForeignKey(nameof(User))]

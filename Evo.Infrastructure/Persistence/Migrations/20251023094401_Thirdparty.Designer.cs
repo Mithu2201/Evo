@@ -4,6 +4,7 @@ using Evo.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evo.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251023094401_Thirdparty")]
+    partial class Thirdparty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,6 +205,9 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<Guid>("ThirdPartyId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -230,17 +236,17 @@ namespace Evo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LicenseNumber");
 
-                    b.HasIndex("PhoneE164")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
                     b.HasIndex("VehiclePlateNo");
 
-                    b.HasIndex("WorkEmail")
+                    b.HasIndex("ThirdPartyId", "PhoneE164")
                         .IsUnique();
 
-                    b.HasIndex("Status", "IsAvailable");
+                    b.HasIndex("ThirdPartyId", "WorkEmail")
+                        .IsUnique();
+
+                    b.HasIndex("ThirdPartyId", "Status", "IsAvailable");
 
                     b.ToTable("ThirdPartyDrivers", (string)null);
                 });

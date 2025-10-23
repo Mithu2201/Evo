@@ -1,11 +1,6 @@
 ﻿using Evo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Evo.Infrastructure.Persistence.Configurations
 {
@@ -69,11 +64,6 @@ namespace Evo.Infrastructure.Persistence.Configurations
             builder.Property(d => d.RowVersion)
                    .IsRowVersion();
 
-            builder.HasOne(d => d.ThirdParty)
-                   .WithMany(t => t.Drivers)
-                   .HasForeignKey(d => d.ThirdPartyId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasOne(d => d.User)
                    .WithMany()
                    .HasForeignKey(d => d.UserId)
@@ -82,12 +72,14 @@ namespace Evo.Infrastructure.Persistence.Configurations
             // Soft-delete global filter
             builder.HasQueryFilter(d => !d.IsDeleted);
 
-            // Useful indexes/uniques within a vendor
-            builder.HasIndex(d => new { d.ThirdPartyId, d.WorkEmail }).IsUnique();
-            builder.HasIndex(d => new { d.ThirdPartyId, d.PhoneE164 }).IsUnique();
+            // Unique email/phone at driver level
+            builder.HasIndex(d => d.WorkEmail).IsUnique();
+            builder.HasIndex(d => d.PhoneE164).IsUnique();
+
+            // Other useful indexes
             builder.HasIndex(d => d.LicenseNumber);
             builder.HasIndex(d => d.VehiclePlateNo);
-            builder.HasIndex(d => new { d.ThirdPartyId, d.Status, d.IsAvailable });
+            builder.HasIndex(d => new { d.Status, d.IsAvailable });
         }
     }
 }

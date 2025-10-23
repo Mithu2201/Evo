@@ -16,7 +16,6 @@ namespace Evo.Application.Contracts.Persistence
         Task SoftDeleteAsync(Guid driverId, CancellationToken ct = default);
 
         Task<IReadOnlyList<ThirdPartyDriver>> ListAsync(
-            Guid? thirdPartyId = null,
             DriverStatus? status = null,
             DriverVerificationStatus? verification = null,
             bool? isAvailable = null,
