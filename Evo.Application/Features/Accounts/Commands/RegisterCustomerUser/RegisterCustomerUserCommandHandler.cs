@@ -38,12 +38,12 @@ namespace Evo.Application.Features.Accounts.Commands.RegisterCustomerUser
 
                 // 5️ Add corresponding customer
 
-                var customerEventDto = _mapper.Map<CustomerUserRegisteredDto>(request.RegisterCustomerUserDto);
-                customerEventDto.UserId = user.Id;
+
 
                
 
-                var customer = _mapper.Map<Customer>(customerEventDto);
+                var customer = _mapper.Map<Customer>(request.RegisterCustomerUserDto);
+                customer.UserId = user.Id;
                 await _unitOfWork.Customers.AddAsync(customer);
 
 
