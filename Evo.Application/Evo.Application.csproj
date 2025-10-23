@@ -14,6 +14,10 @@
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
 		<PackageReference Include="MediatR" Version="13.0.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<!-- Reference to Domain layer -->
@@ -24,7 +28,6 @@
 	<!-- Optional: folders for organization -->
 	<ItemGroup>
 		<Folder Include="Features\Accounts\Queries\" />
-		<Folder Include="Features\ThirdPartyDrivers\ViewModels\" />
 	</ItemGroup>
 
 </Project>

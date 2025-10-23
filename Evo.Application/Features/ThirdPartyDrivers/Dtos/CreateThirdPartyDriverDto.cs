@@ -9,8 +9,6 @@ namespace Evo.Application.Features.ThirdPartyDrivers.Dtos
 {
     public class CreateThirdPartyDriverDto
     {
-        [Required]
-        public Guid ThirdPartyId { get; set; }
         public string? UserId { get; set; }
 
         [Required, MaxLength(100)]

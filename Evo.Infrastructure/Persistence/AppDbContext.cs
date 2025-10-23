@@ -13,7 +13,7 @@ namespace Evo.Infrastructure.Persistence
     {
         public DbSet<User> Users => Set<User>();
         public DbSet<Customer> Customers => Set<Customer>();
-        public DbSet<ThirdParty> ThirdParties => Set<ThirdParty>();
+        
         public DbSet<ThirdPartyDriver> ThirdPartyDrivers => Set<ThirdPartyDriver>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,5 +28,6 @@ namespace Evo.Infrastructure.Persistence
         //dotnet ef migrations add InitialCreate --project Evo.Infrastructure --startup-project Evo.API --output-dir Persistence/Migrations
 
         //dotnet ef database update --project Evo.Infrastructure --startup-project Evo.API
+        //ef migrations remove
     }
 }

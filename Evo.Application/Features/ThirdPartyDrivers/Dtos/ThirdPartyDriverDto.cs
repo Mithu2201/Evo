@@ -10,7 +10,6 @@ namespace Evo.Application.Features.ThirdPartyDrivers.Dtos
     public class ThirdPartyDriverDto
     {
         public Guid DriverId { get; set; }
-        public Guid ThirdPartyId { get; set; }
         public string? UserId { get; set; }
         public string FirstName { get; set; } = default!;
         public string? LastName { get; set; }
