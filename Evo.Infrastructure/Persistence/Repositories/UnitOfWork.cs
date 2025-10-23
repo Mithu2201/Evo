@@ -15,13 +15,15 @@ namespace Evo.Infrastructure.Persistence.Repositories
 
         public IUserRepository Users { get; }
         public ICustomerRepository Customers { get; }
+        public IThirdPartyDriverRepository ThirdPartyDrivers { get; }
 
         //Constructor
-        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers)
+        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers, IThirdPartyDriverRepository thirdPartyDrivers)
         {
             _context = context;
             Users = users;
             Customers = customers;
+            ThirdPartyDrivers = thirdPartyDrivers;
         }
 
         // Start transaction

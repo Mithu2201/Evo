@@ -24,6 +24,7 @@
 	<!-- Optional: folders for organization -->
 	<ItemGroup>
 		<Folder Include="Features\Accounts\Queries\" />
+		<Folder Include="Features\ThirdPartyDrivers\ViewModels\" />
 	</ItemGroup>
 
 </Project>
