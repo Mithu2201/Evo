@@ -16,6 +16,8 @@ namespace Evo.Infrastructure.Persistence
         
         public DbSet<ThirdPartyDriver> ThirdPartyDrivers => Set<ThirdPartyDriver>();
 
+        public DbSet<ServiceProvider> ServiceProviders => Set<ServiceProvider>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
