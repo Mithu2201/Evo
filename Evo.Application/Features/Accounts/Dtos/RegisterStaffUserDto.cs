@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Evo.Application.DTOs
 {
-    public class StaffUserDto
+    public class RegisterStaffUserDto
     {
         // ---- USER INFO ----
         [Required]

@@ -16,12 +16,15 @@ namespace Evo.Infrastructure.Persistence.Repositories
         public IUserRepository Users { get; }
         public ICustomerRepository Customers { get; }
 
+        public IStaffRepository Staffs { get; }
+
         //Constructor
-        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers)
+        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers, IStaffRepository staffs)
         {
             _context = context;
             Users = users;
             Customers = customers;
+            Staffs = staffs;
         }
 
         // Start transaction

@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Evo.Application.DTOs
 {
-    public class AdminUserDto
+    public class RegisterAdminUserDto
     {
+         
         // ---- User Info ----
         [Required]
         [EmailAddress]

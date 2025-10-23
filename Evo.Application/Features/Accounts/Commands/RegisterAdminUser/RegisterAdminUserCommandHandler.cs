@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Evo.Application.Features.Accounts.Commands.RegisterAdminUser
 {
-    internal class RegisterAdminUserCommand
-    {
-    }
+    //internal class RegisterAdminUserCommand
+    //{
+    //}
 }

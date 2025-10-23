@@ -29,7 +29,7 @@ namespace Evo.Infrastructure.Security
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Customer.Name)
+                //new Claim(JwtRegisteredClaimNames.UniqueName, user.Customer.Name)
             };
 
 

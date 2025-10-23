@@ -9,7 +9,7 @@ namespace Evo.Domain.Enums
     public enum StaffPosition
     {
         Junior,
-        Senaor,
+        Senior,   
         Executive
 
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Evo.Infrastructure.Persistence.Repositories
 {
-    public class AdminRepositoryy(AppDbContext _context) : IAdminRepository
+    public class AdminRepository(AppDbContext _context) : IAdminRepository
     {
        
             public async Task AddAsync(Admin admin) =>
