@@ -4,6 +4,7 @@ using Evo.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evo.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251022111951_AdminStaffCreate")]
+    partial class AdminStaffCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,11 +217,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
-            modelBuilder.Entity("Evo.Domain.Entities.ThirdPartyDriver", b =>
-                {
-                    b.Property<Guid>("DriverId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AddressLine1")
                         .HasMaxLength(200)
@@ -244,11 +242,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.Property<string>("Department")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("District")
                         .HasMaxLength(100)
@@ -272,13 +265,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .HasMaxLength(100)
@@ -309,43 +295,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
-                    b.Property<DateTime?>("LicenseExpiryUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LicenseNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NIC")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("PhoneE164")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("PhotoUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("PostalCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<decimal?>("Rating")
-                        .HasPrecision(2, 1)
-                        .HasColumnType("decimal(2,1)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -375,43 +324,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         {
                             t.HasCheckConstraint("CK_Staff_Phone_Length", "LEN([Phone]) BETWEEN 7 AND 20");
                         });
-                        .HasColumnType("nvarchar(36)");
-
-                    b.Property<string>("VehiclePlateNo")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("VehicleType")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("VerificationStatus")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("WorkEmail")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("DriverId");
-
-                    b.HasIndex("LicenseNumber");
-
-                    b.HasIndex("PhoneE164")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("VehiclePlateNo");
-
-                    b.HasIndex("WorkEmail")
-                        .IsUnique();
-
-                    b.HasIndex("Status", "IsAvailable");
-
-                    b.ToTable("ThirdPartyDrivers", (string)null);
                 });
 
             modelBuilder.Entity("Evo.Domain.Entities.User", b =>
@@ -512,12 +424,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.HasOne("Evo.Domain.Entities.User", null)
                         .WithOne("Staff")
                         .HasForeignKey("Evo.Domain.Entities.Staff", "UserId1");
-            modelBuilder.Entity("Evo.Domain.Entities.ThirdPartyDriver", b =>
-                {
-                    b.HasOne("Evo.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
                 });

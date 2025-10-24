@@ -41,6 +41,10 @@ namespace Evo.Domain.Entities
 
         // Navigation properties
         public virtual Customer Customer { get; set; }
+       
+        public virtual Staff Staff { get; set; }
+        //public virtual ServiceProvider? ServiceProvider { get; set; }
+        //public virtual ThirdParty? ThirdParty { get; set; }
         
         //public virtual AdminStaff? Admin { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }

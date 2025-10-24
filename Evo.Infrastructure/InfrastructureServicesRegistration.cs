@@ -25,6 +25,8 @@ namespace Evo.Infrastructure
             // ✅ Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IStaffRepository, StaffRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IThirdPartyDriverRepository, ThirdPartyDriverRepository>();
 
             // ✅ Register security services

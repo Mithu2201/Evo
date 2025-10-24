@@ -10,6 +10,8 @@ namespace Evo.Application.Contracts.Persistence
     {
         IUserRepository Users { get; }
         ICustomerRepository Customers { get; }
+        IStaffRepository Staffs { get; }
+        IAdminRepository Admins { get; }
         IThirdPartyDriverRepository ThirdPartyDrivers { get; }
 
         Task BeginTransactionAsync();
