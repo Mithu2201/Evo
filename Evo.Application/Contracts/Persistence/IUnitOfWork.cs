@@ -14,6 +14,8 @@ namespace Evo.Application.Contracts.Persistence
         IAdminRepository Admins { get; }
         IThirdPartyDriverRepository ThirdPartyDrivers { get; }
 
+        IServiceProviderRepository ServiceProviders { get; }
+
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
         Task RollbackTransactionAsync();

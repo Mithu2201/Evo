@@ -142,6 +142,73 @@ namespace Evo.Application.Mappings
                 .ForMember(dest => dest.Id, opt => opt.Ignore()); // let EF/default ctor handle
 
 
+            // DTO -> User
+            CreateMap<RegisterServiceProviderUserDto, User>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                // Respect incoming role if provided; default to ServiceProvider
+                .ForMember(dest => dest.RolePermissions, opt => opt.MapFrom(src => src.RolePermissions ?? UserRole.ServiceProvider))
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive ?? true))
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
+                .ForMember(dest => dest.ServiceProvider, opt => opt.Ignore()) // link after creation
+                .AfterMap((src, dest) =>
+                {
+                    using var hmac = new HMACSHA512(); // Consider PBKDF2/BCrypt/Argon2 in production
+                    dest.PasswordSalt = hmac.Key;
+                    dest.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(src.Password));
+                });
+
+            // DTO -> ServiceProvider
+            CreateMap<RegisterServiceProviderUserDto, ServiceProvider>()
+                // Core identity
+                .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.CompanyName))
+                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.BrandName))
+                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Phone))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+
+                // Address (granular)
+                .ForMember(dest => dest.AddressLine1, opt => opt.MapFrom(src => src.AddressLine1))
+                .ForMember(dest => dest.AddressLine2, opt => opt.MapFrom(src => src.AddressLine2))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                .ForMember(dest => dest.District, opt => opt.MapFrom(src => src.District))
+                .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.PostalCode))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+
+                // Status / verification (DTO has no property; default to Pending)
+                .ForMember(dest => dest.VerificationStatus, opt => opt.MapFrom(_ => VerificationStatus.Pending))
+
+                // Operational params (map only when provided)
+                .ForMember(dest => dest.MaxConcurrentBookings, opt =>
+                {
+                    opt.PreCondition(src => src.MaxConcurrentBookings.HasValue);
+                    opt.MapFrom(src => src.MaxConcurrentBookings!.Value);
+                })
+                .ForMember(dest => dest.MinLeadTimeDays, opt =>
+                {
+                    opt.PreCondition(src => src.MinLeadTimeDays.HasValue);
+                    opt.MapFrom(src => src.MinLeadTimeDays!.Value);
+                })
+                .ForMember(dest => dest.BookingWindowDays, opt =>
+                {
+                    opt.PreCondition(src => src.BookingWindowDays.HasValue);
+                    opt.MapFrom(src => src.BookingWindowDays!.Value);
+                })
+                .ForMember(dest => dest.CreditPeriod, opt =>
+                {
+                    opt.PreCondition(src => src.CreditPeriod.HasValue);
+                    opt.MapFrom(src => src.CreditPeriod!.Value);
+                })
+
+                // Business docs / policies
+                .ForMember(dest => dest.BusinessLicense, opt => opt.MapFrom(src => src.BusinessLicense))
+                .ForMember(dest => dest.TaxId, opt => opt.MapFrom(src => src.TaxId))
+                .ForMember(dest => dest.CancellationPolicy, opt => opt.MapFrom(src => src.CancellationPolicy ?? "{}"))
+                .ForMember(dest => dest.PaymentMethods, opt => opt.MapFrom(src => src.PaymentMethods ?? "[]"))
+
+                // Navigation & concurrency
+                .ForMember(dest => dest.User, opt => opt.Ignore()) // set UserId in handler
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
         }
 
 

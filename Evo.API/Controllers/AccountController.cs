@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Evo.API.Extensions;
 using Evo.API.Models.Requests.Accounts;
+using Evo.Application.Features.Accounts.Commands.GoogleLogin;
 using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
+using Evo.Application.Features.Accounts.Commands.RegisterServiceProviderUser;
 using Evo.Application.Features.Accounts.Commands.RegisterStaffUser;
-using Evo.Application.Features.Accounts.Commands.GoogleLogin;
+using Evo.Application.Features.Accounts.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
@@ -32,6 +34,14 @@ namespace Evo.API.Controllers
             var command = _mapper.Map<GoogleLoginCommand>(request);
             var userDto = await _mediator.Send(command);
             return this.ToApiResponse(userDto, "Google sign-in successful");
+        }
+
+        [HttpPost("registerserviceprovider")] // http://localhost:5077/api/account/registerserviceprovider
+        public async Task<IActionResult> RegisterServiceProvider(RegisterServiceProviderApiRequest request)
+        {
+            var command = _mapper.Map<RegisterServiceProviderUserCommand>(request);
+            var userDto = await _mediator.Send(command);
+            return this.ToApiResponse(userDto, "Service provider registered successfully");
         }
     }
 }

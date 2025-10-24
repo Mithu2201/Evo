@@ -5,8 +5,10 @@ using Evo.Application.DTOs;
 using Evo.Application.Features.Accounts.Commands.GoogleLogin;
 using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
+using Evo.Application.Features.Accounts.Commands.RegisterServiceProviderUser;
 using Evo.Application.Features.Accounts.Commands.RegisterStaffUser;
 using Evo.Application.Features.Accounts.Dtos;
+using Evo.Application.Features.Accounts.Requests;
 using Evo.Application.Features.ThirdPartyDrivers.Commands.Create;
 using Evo.Application.Features.ThirdPartyDrivers.Dtos;
 
@@ -47,6 +49,12 @@ namespace Evo.API.Mappings
             // Google login mapping
             CreateMap<GoogleLoginApiRequest, GoogleLoginCommand>()
                 .ForMember(dest => dest.IdToken, opt => opt.MapFrom(src => src.IdToken));
+
+
+            CreateMap<RegisterServiceProviderApiRequest, RegisterServiceProviderUserDto>();
+
+            CreateMap<RegisterServiceProviderApiRequest, RegisterServiceProviderUserCommand>()
+                .ForMember(dest => dest.RegisterServiceProviderUserDto, opt => opt.MapFrom(src => src));
 
         }
 

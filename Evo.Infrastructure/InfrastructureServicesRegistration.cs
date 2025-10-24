@@ -28,6 +28,8 @@ namespace Evo.Infrastructure
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IThirdPartyDriverRepository, ThirdPartyDriverRepository>();
+            services.AddScoped<IServiceProviderRepository, ServiceProviderRepository>();
+
 
             // ✅ Register security services
             services.AddScoped<ITokenService, TokenService>();

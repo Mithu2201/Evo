@@ -12,7 +12,7 @@ namespace Evo.Domain.Entities
     public class ServiceProvider
     {
         [Key]
-        public Guid ServiceProviderId { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required, ForeignKey(nameof(User))]
         public string UserId { get; set; }

@@ -20,8 +20,8 @@ namespace Evo.Infrastructure.Persistence.Configurations
             builder.ToTable("ServiceProviders");
 
             // Primary Key
-            builder.HasKey(sp => sp.ServiceProviderId);
-            builder.Property(sp => sp.ServiceProviderId)
+            builder.HasKey(sp => sp.Id);
+            builder.Property(sp => sp.Id)
                    .ValueGeneratedNever(); // Guid generated client-side
 
             // Relationships
