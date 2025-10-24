@@ -21,8 +21,7 @@ namespace Evo.Infrastructure.Persistence.Repositories
         public IAdminRepository Admins { get; }
 
         //Constructor
-        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers, IStaffRepository staffs, IAdminRepository admins)
-        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers, IThirdPartyDriverRepository thirdPartyDrivers)
+        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers, IStaffRepository staffs, IAdminRepository admins, IThirdPartyDriverRepository thirdPartyDrivers)
         {
             _context = context;
             Users = users;
