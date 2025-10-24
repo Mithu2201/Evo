@@ -15,5 +15,8 @@ namespace Evo.Application.Contracts.Persistence
         Task<List<User>> GetAllUsersAsync();
         Task<User?> GetUserByIdAsync(string id);
 
+        // ✅ Add this method
+        Task UpdateAsync(User user);
+
     }
 }

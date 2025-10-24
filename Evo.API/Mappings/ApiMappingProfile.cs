@@ -3,6 +3,7 @@ using Evo.API.Models.Requests.Accounts;
 using Evo.API.Models.Requests.ThirdPartyDrivers;
 using Evo.Application.DTOs;
 using Evo.Application.Features.Accounts.Commands.GoogleLogin;
+using Evo.Application.Features.Accounts.Commands.LoginUser;
 using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
 using Evo.Application.Features.Accounts.Commands.RegisterServiceProviderUser;
@@ -11,6 +12,7 @@ using Evo.Application.Features.Accounts.Dtos;
 using Evo.Application.Features.Accounts.Requests;
 using Evo.Application.Features.ThirdPartyDrivers.Commands.Create;
 using Evo.Application.Features.ThirdPartyDrivers.Dtos;
+using Microsoft.AspNetCore.Identity.Data;
 
 
 namespace Evo.API.Mappings
@@ -55,6 +57,12 @@ namespace Evo.API.Mappings
 
             CreateMap<RegisterServiceProviderApiRequest, RegisterServiceProviderUserCommand>()
                 .ForMember(dest => dest.RegisterServiceProviderUserDto, opt => opt.MapFrom(src => src));
+
+
+            CreateMap<LoginRequest, LoginDto>();
+
+            CreateMap<LoginRequest, LoginUserCommand>()
+               .ForMember(dest => dest.LoginDto, opt => opt.MapFrom(src => src));
 
         }
 
