@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Evo.API.Models.Requests.Accounts;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
+using Evo.Application.Features.Accounts.Commands.GoogleLogin;
 using Evo.Application.Features.Accounts.Dtos;
 
 
@@ -23,6 +24,9 @@ namespace Evo.API.Mappings
             CreateMap<RegisterCustomerApiRequest, RegisterCustomerUserCommand>()
                     .ForMember(dest => dest.RegisterCustomerUserDto, opt => opt.MapFrom(src => src));
 
+            // Google login mapping
+            CreateMap<GoogleLoginApiRequest, GoogleLoginCommand>()
+                .ForMember(dest => dest.IdToken, opt => opt.MapFrom(src => src.IdToken));
 
         }
 
