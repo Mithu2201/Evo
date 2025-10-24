@@ -54,7 +54,7 @@ namespace Evo.Domain.Entities
         public string? Country { get; set; }
         // ---- Job ----
          [Required]
-        public StaffPosition Position { get; set; } = StaffPosition.Junior;
+        public StaffPosition Position { get; set; } 
 
         [MaxLength(100)]
         public string? Department { get; set; }

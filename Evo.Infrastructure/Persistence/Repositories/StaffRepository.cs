@@ -11,16 +11,13 @@ namespace Evo.Infrastructure.Persistence.Repositories
 {
     public class StaffRepository(AppDbContext _context) : IStaffRepository
     {
-       
-            public async Task AddAsync(Staff staff) =>
-                await _context.Staffs.AddAsync(staff);
+        public async Task AddAsync(Staff staff) =>
+            await _context.Staffs.AddAsync(staff);
 
-            public async Task<Staff?> GetByIdAsync(int id) =>
-                await _context.Staffs.FindAsync(id);
+        public async Task<Staff?> GetByIdAsync(string id) =>
+            await _context.Staffs.FirstOrDefaultAsync(s => s.Id == id);
 
-            public async Task<IEnumerable<Staff>> GetAllAsync() =>
-                await _context.Staffs.ToListAsync();
-
-        
+        public async Task<IEnumerable<Staff>> GetAllAsync() =>
+            await _context.Staffs.ToListAsync();
     }
 }

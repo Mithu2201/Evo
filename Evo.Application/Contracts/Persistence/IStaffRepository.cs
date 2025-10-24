@@ -10,7 +10,7 @@ namespace Evo.Application.Contracts.Persistence
     public interface IStaffRepository
     {
         Task AddAsync(Staff satff);
-        Task<Staff?> GetByIdAsync(int id);
+        Task<Staff?> GetByIdAsync(string id);
         Task<IEnumerable<Staff>> GetAllAsync();
     }
 }

@@ -29,7 +29,7 @@ namespace Evo.API.Models.Requests.Accounts
         /// <summary>
         /// Optional account status (defaults to Active).
         /// </summary>
-        public AccountStatus? Status { get; set; } = AccountStatus.Active;
+        //public AccountStatus? Status { get; set; } = AccountStatus.Active;
 
 
         // ----- Staff section -----
@@ -67,7 +67,7 @@ namespace Evo.API.Models.Requests.Accounts
         /// <summary>
         /// Job-related details.
         /// </summary>
-        public StaffPosition Position { get; set; } = StaffPosition.Junior;
+        public String Position { get; set; }
         public string? Department { get; set; }
 
         /// <summary>

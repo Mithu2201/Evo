@@ -11,15 +11,16 @@ namespace Evo.Infrastructure.Persistence.Repositories
 {
     public class AdminRepository(AppDbContext _context) : IAdminRepository
     {
-       
-            public async Task AddAsync(Admin admin) =>
-                await _context.Admins.AddAsync(admin);
+        public async Task AddAsync(Admin admin) =>
+            await _context.Admins.AddAsync(admin);
 
-            public async Task<Admin?> GetByIdAsync(int id) =>
-                await _context.Admins.FindAsync(id);
+        public async Task<Admin?> GetByIdAsync(string id) =>
+            await _context.Admins.FirstOrDefaultAsync(a => a.Id == id);
 
-            public async Task<IEnumerable<Admin>> GetAllAsync() =>
-                await _context.Admins.ToListAsync();
-        
+        public async Task<IEnumerable<Admin>> GetAllAsync() =>
+            await _context.Admins.ToListAsync();
+
+        public async Task<Admin?> GetByStaffIdAsync(string staffId) =>
+            await _context.Admins.FirstOrDefaultAsync(a => a.StaffId == staffId);
     }
 }

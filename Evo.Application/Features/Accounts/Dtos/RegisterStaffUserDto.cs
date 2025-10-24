@@ -1,4 +1,4 @@
-﻿using Evo.Domain.Enums;
+﻿ using Evo.Domain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -54,7 +54,7 @@ namespace Evo.Application.DTOs
         public string? Country { get; set; }
 
         [Required]
-        public StaffPosition Position { get; set; } = StaffPosition.Junior;
+        public StaffPosition Position { get; set; }
 
         [MaxLength(100)]
         public string? Department { get; set; }

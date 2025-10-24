@@ -8,8 +8,8 @@ namespace Evo.Domain.Enums
 {
     public enum AdminPosition
     {
-        JuniorAdmin,
-        SenaorAdmin,
-        ExecutiveAdmin
+        Admin,
+        SuperAdmin
+      
     }
 }

@@ -14,20 +14,15 @@ namespace Evo.Domain.Entities
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        [Required, ForeignKey(nameof(User))]
-        public string UserId { get; set; }
-
-        public virtual User User { get; set; } = default!;
-
         [Required, ForeignKey(nameof(Staff))]
-        public string StaffId { get; set; }
+        public string StaffId { get; set; } = default!;
 
         public virtual Staff Staff { get; set; } = default!;
 
         public AccountStatus Status { get; set; } = AccountStatus.Active;
 
         [Required]
-        public AdminPosition Position { get; set; } = AdminPosition.JuniorAdmin;
+        public AdminPosition Position { get; set; } 
 
 
     }

@@ -1,85 +1,86 @@
 ﻿using Evo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Evo.Infrastructure.Persistence.Configurations
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public sealed class UserConfiguration : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            // Table & key
+            // Table & Key
             builder.ToTable("Users");
             builder.HasKey(u => u.Id);
 
-            // Id: string GUID (36 chars like "d3f9...-..."). Keep as NVARCHAR(36).
+            // Id as GUID string (36 incl. hyphens). Adjust if you use different format.
             builder.Property(u => u.Id)
-                   .HasMaxLength(36)
-                   .IsRequired();
+                   .HasMaxLength(36);
 
-            // Email (acts as username): required, unique (case-insensitive)
+            // Email (unique, normalized to lowercase)
+            var lowerCase = new ValueConverter<string, string>(
+                v => v == null ? null! : v.ToLowerInvariant(),
+                v => v
+            );
+
             builder.Property(u => u.Email)
                    .IsRequired()
                    .HasMaxLength(100)
-                   // For SQL Server; remove/adjust for other providers
-                   .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+                   .HasConversion(lowerCase);
 
             builder.HasIndex(u => u.Email)
                    .IsUnique()
                    .HasDatabaseName("UX_Users_Email");
 
-            // Password hash/salt as VARBINARY with upper bounds
+            // PasswordHash / PasswordSalt (binary with max lengths)
             builder.Property(u => u.PasswordHash)
                    .IsRequired()
-                   .HasMaxLength(512); // VARBINARY(512)
+                   .HasMaxLength(512);
 
             builder.Property(u => u.PasswordSalt)
                    .IsRequired()
-                   .HasMaxLength(128); // VARBINARY(128)
+                   .HasMaxLength(128);
 
-            // Enum as string (readable). Remove HasConversion<string>() to store as int.
+            // RolePermissions (enum as string for readability)
             builder.Property(u => u.RolePermissions)
+                   .IsRequired()
                    .HasConversion<string>()
-                   .HasMaxLength(64)
-                   .IsRequired();
+                   .HasMaxLength(100);
 
             // Timestamps & flags
             builder.Property(u => u.CreatedAt)
-                   .IsRequired()
-                   .HasDefaultValueSql("GETUTCDATE()");
+                   .IsRequired();
+            // Optionally also set a DB default (uncomment one of these per provider):
+            // .HasDefaultValueSql("GETUTCDATE()");            // SQL Server
+            // .HasDefaultValueSql("(now() at time zone 'utc')"); // PostgreSQL
 
-            builder.Property(u => u.UpdatedAt)
-                   .IsRequired(false);
-
-            builder.Property(u => u.LastLogin)
-                   .IsRequired(false);
+            builder.Property(u => u.UpdatedAt);
+            builder.Property(u => u.LastLogin);
 
             builder.Property(u => u.IsActive)
-                   .IsRequired()
                    .HasDefaultValue(true);
 
-            // One-to-one with Customer (FK on Customer.UserId)
-            builder.HasOne(u => u.Customer)
-                   .WithOne(c => c.User!)
-                   .HasForeignKey<Customer>(c => c.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            // Useful composite index for filtering by activity/role
+            builder.HasIndex(u => new { u.IsActive, u.RolePermissions })
+                   .HasDatabaseName("IX_Users_IsActive_Role");
 
-            // DB-level checks (SQL Server)
-            builder.ToTable(t =>
-            {
-                // Length sanity on Id (36 with hyphens) — not a full GUID regex, just a safety check
-                t.HasCheckConstraint("CK_Users_Id_Len", "LEN([Id]) = 36");
-                // Enforce email length explicitly (redundant with column, but clear)
-                t.HasCheckConstraint("CK_Users_Email_Len", "LEN([Email]) BETWEEN 5 AND 100");
-                // Hash/salt byte ranges
-                t.HasCheckConstraint("CK_Users_PasswordHash_Len", "DATALENGTH([PasswordHash]) BETWEEN 20 AND 512");
-                t.HasCheckConstraint("CK_Users_PasswordSalt_Len", "DATALENGTH([PasswordSalt]) BETWEEN 16 AND 128");
-            });
+            // --- Optional: One-to-one relations (uncomment & adjust if your related entities have FK: UserId) ---
+            // builder.HasOne(u => u.Customer)
+            //        .WithOne(c => c.User)
+            //        .HasForeignKey<Customer>(c => c.UserId)
+            //        .OnDelete(DeleteBehavior.Restrict);
+
+            // builder.HasOne(u => u.Staff)
+            //        .WithOne(s => s.User)
+            //        .HasForeignKey<Staff>(s => s.UserId)
+            //        .OnDelete(DeleteBehavior.Restrict);
+
+            // --- Optional: SQL Server check constraints for binary lengths ---
+            // builder.ToTable(t =>
+            // {
+            //     t.HasCheckConstraint("CK_Users_PasswordSalt_Length", "DATALENGTH([PasswordSalt]) BETWEEN 16 AND 128");
+            //     t.HasCheckConstraint("CK_Users_PasswordHash_Length", "DATALENGTH([PasswordHash]) BETWEEN 20 AND 512");
+            // });
         }
     }
 }

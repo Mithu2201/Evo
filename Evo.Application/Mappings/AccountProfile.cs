@@ -39,7 +39,7 @@ namespace Evo.Application.Mappings
                    dest.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(src.Password));
                });
 
- 
+
 
             // Map from DTO -> Customer entity
             CreateMap<RegisterCustomerUserDto, Customer>()
@@ -72,7 +72,7 @@ namespace Evo.Application.Mappings
                .ForMember(d => d.PasswordSalt, o => o.Ignore())
                // navs
                .ForMember(d => d.Customer, o => o.Ignore())
-             //  .ForMember(d => d.ServiceProvider, o => o.Ignore())
+               //  .ForMember(d => d.ServiceProvider, o => o.Ignore())
                .ForMember(d => d.Staff, o => o.Ignore())
                .AfterMap((src, dest) =>
                {
@@ -105,49 +105,41 @@ namespace Evo.Application.Mappings
                 //.ForMember(d => d.RowVersion, o => o.Ignore())
                 .ForMember(d => d.User, o => o.Ignore())
                 .ForMember(d => d.UserId, o => o.Ignore()); // set in handler after creating User
+
+
             CreateMap<RegisterAdminUserDto, User>()
            // Simple fields
-           .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+           
+           .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.Status == AccountStatus.Active))
+           // If your enum name differs, change UserRole.Admin accordingly.
            .ForMember(dest => dest.RolePermissions, opt => opt.MapFrom(_ => UserRole.Admin))
-           .ForMember(dest => dest.IsActive, opt => opt.MapFrom(_ => true))
-           .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
 
-           // Ignore navs/IDs we don't set here
-           .ForMember(dest => dest.Admin, opt => opt.Ignore())
-           .ForMember(dest => dest.Customer, opt => opt.Ignore())
-           .ForMember(dest => dest.Staff, opt => opt.Ignore())
-
-           // Password handled after map
+           // Ignore password fields; set them in AfterMap
            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
            .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
+
+           // (Optional) Ignore nav properties if present on User
+           // .ForMember(dest => dest.Customer, opt => opt.Ignore())
+           // .ForMember(dest => dest.Staff,    opt => opt.Ignore())
+           // .ForMember(dest => dest.Admin,    opt => opt.Ignore())
+
+           // Hash password
            .AfterMap((src, dest) =>
            {
                using var hmac = new HMACSHA512();
                dest.PasswordSalt = hmac.Key;
-               dest.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(src.Password));
+              
            });
 
-            // -------- RegisterAdminUserDto -> Admin --------
+            // --- RegisterAdminUserDto → Admin ---
             CreateMap<RegisterAdminUserDto, Admin>()
-                // Defer linking; we’ll set these in the handler
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.StaffId, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForMember(dest => dest.Staff, opt => opt.Ignore())
-
-                // Defaults / enums
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? AccountStatus.Active))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => src.StaffId))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.Position))
+                .ForMember(dest => dest.Staff, opt => opt.Ignore()) // linked by StaffId/EF
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); // let EF/default ctor handle
 
-                // If caller passed an existing UserId (and not "0"), use it
-                .AfterMap((src, dest) =>
-                {
-                    if (!string.IsNullOrWhiteSpace(src.UserId) && src.UserId != "0")
-                    {
-                        dest.UserId = src.UserId;
-                    }
-                });
+
         }
 
 

@@ -19,7 +19,9 @@ namespace Evo.API.Mappings
             // It’s needed because the RegisterUserCommand contains a RegisterDto property, so AutoMapper must know how to populate it.
             CreateMap<RegisterCustomerApiRequest, RegisterCustomerUserDto>();
             CreateMap<RegisterStaffApiRequest, RegisterStaffUserDto>();
-            CreateMap<RegisterAdminApiRequest, RegisterAdminUserDto>();
+            CreateMap<RegisterAdminApiRequest, RegisterAdminUserDto>()
+                .ForMember(d => d.Position, o => o.MapFrom(s => s.AdminPosition))
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status));
 
 
             // Map API request to Command and fill its RegisterDto property

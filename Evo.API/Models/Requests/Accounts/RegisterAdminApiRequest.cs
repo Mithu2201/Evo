@@ -4,10 +4,8 @@ namespace Evo.API.Models.Requests.Accounts
 {
     public class RegisterAdminApiRequest
     {
-        public string Email { get; set; } = string.Empty;
+  
 
-        // Raw password (will be hashed before storing).
-        public string Password { get; set; } = string.Empty;
 
         // Force admin role by default.
     
@@ -19,18 +17,13 @@ namespace Evo.API.Models.Requests.Accounts
         
 
         // Staff’s email (can mirror user email).
-        public string? StaffId { get; set; } = string.Empty;
-
-  
-        // Job
- 
-
+        public string StaffId { get; set; } = string.Empty;
 
         // ----- Admin section -----
         // Status for the Admin row (defaults to Active).
-        public AccountStatus? Status { get; set; } = AccountStatus.Active;
+        public AccountStatus Status { get; set; } = AccountStatus.Active;
 
         // Admin role/grade inside Admin table.
-        public AdminPosition AdminPosition { get; set; } = AdminPosition.JuniorAdmin;
+        public AdminPosition AdminPosition { get; set; }
     }
 }
