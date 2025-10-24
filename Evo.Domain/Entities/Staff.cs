@@ -75,5 +75,7 @@ namespace Evo.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 
+        public virtual Admin? Admin { get; set; }
+
     }
 }

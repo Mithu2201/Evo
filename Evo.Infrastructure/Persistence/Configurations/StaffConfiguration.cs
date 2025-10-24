@@ -99,6 +99,13 @@ namespace Evo.Infrastructure.Persistence.Configurations
             {
                 t.HasCheckConstraint("CK_Staff_Phone_Length", "LEN([Phone]) BETWEEN 7 AND 20");
             });
+
+            // ---- Admin relationship ----
+            builder.HasOne(s => s.Admin)
+                   .WithOne(a => a.Staff)
+                   .HasForeignKey<Admin>(a => a.StaffId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
