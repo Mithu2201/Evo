@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Evo.API.Models.Requests.Accounts;
+using Evo.API.Models.Requests.ThirdPartyDrivers;
 using Evo.Application.DTOs;
+using Evo.Application.Features.Accounts.Commands.GoogleLogin;
 using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
 using Evo.Application.Features.Accounts.Commands.RegisterStaffUser;
-using Evo.Application.Features.Accounts.Commands.GoogleLogin;
 using Evo.Application.Features.Accounts.Dtos;
+using Evo.Application.Features.ThirdPartyDrivers.Commands.Create;
+using Evo.Application.Features.ThirdPartyDrivers.Dtos;
 
 
 namespace Evo.API.Mappings
@@ -23,6 +26,7 @@ namespace Evo.API.Mappings
             CreateMap<RegisterAdminApiRequest, RegisterAdminUserDto>()
                 .ForMember(d => d.Position, o => o.MapFrom(s => s.AdminPosition))
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status));
+            CreateMap<CreateThirdPartyApiRequest, CreateThirdPartyDriverDto>();
 
 
             // Map API request to Command and fill its RegisterDto property
@@ -36,6 +40,9 @@ namespace Evo.API.Mappings
             
             CreateMap<RegisterAdminApiRequest, RegisterAdminUserCommand>()
                     .ForMember(dest => dest.RegisterAdminUserDto, opt => opt.MapFrom(src => src));
+
+            CreateMap<CreateThirdPartyApiRequest, CreateThirdPartyDriverCommand>()
+                    .ForMember(dest => dest.Driver, opt => opt.MapFrom(src => src));
 
             // Google login mapping
             CreateMap<GoogleLoginApiRequest, GoogleLoginCommand>()
