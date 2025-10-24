@@ -14,8 +14,10 @@ namespace Evo.Application.Mappings
 
             // Map Domain → DTO
             CreateMap<User, UserDto>()
-                .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Customer.Name))
-                .ForMember(dest => dest.Token, opt => opt.Ignore()); // Token is set manually after creation
+                .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RolePermissions.ToString()))
+                .ForMember(dest => dest.Token, opt => opt.Ignore());
+
 
             CreateMap<RegisterCustomerUserDto, User>()
                // Map simple fields

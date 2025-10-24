@@ -44,11 +44,19 @@ namespace Evo.Domain.Entities
         
         //public virtual AdminStaff? Admin { get; set; }
         public virtual ServiceProvider ServiceProvider { get; set; }
-        //public virtual ThirdParty? ThirdParty { get; set; }
+        public virtual ThirdPartyDriver ThirdPartyDriver { get; set; }
         //public virtual EventOrganiser? EventOrganiser { get; set; }
 
         //public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
         //public virtual ICollection<Reminder> Reminders { get; set; } = new HashSet<Reminder>();
+
+
+        public string DisplayName =>
+                Customer?.Name ??
+                ServiceProvider?.BrandName ??
+                //AdminStaff?.Name ??
+                ThirdPartyDriver?.FirstName ??
+                "Unknown";
     }
 
 }

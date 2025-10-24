@@ -29,6 +29,7 @@ namespace Evo.Infrastructure
 
             // ✅ Register security services
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 
             // Register UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
