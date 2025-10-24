@@ -24,7 +24,9 @@ namespace Evo.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            return await _context.Users
+                .Include(u => u.Customer)
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
 

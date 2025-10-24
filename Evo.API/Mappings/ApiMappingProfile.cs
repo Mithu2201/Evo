@@ -4,6 +4,7 @@ using Evo.Application.DTOs;
 using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
 using Evo.Application.Features.Accounts.Commands.RegisterStaffUser;
+using Evo.Application.Features.Accounts.Commands.GoogleLogin;
 using Evo.Application.Features.Accounts.Dtos;
 
 
@@ -36,6 +37,9 @@ namespace Evo.API.Mappings
             CreateMap<RegisterAdminApiRequest, RegisterAdminUserCommand>()
                     .ForMember(dest => dest.RegisterAdminUserDto, opt => opt.MapFrom(src => src));
 
+            // Google login mapping
+            CreateMap<GoogleLoginApiRequest, GoogleLoginCommand>()
+                .ForMember(dest => dest.IdToken, opt => opt.MapFrom(src => src.IdToken));
 
         }
 

@@ -2,11 +2,6 @@
 using Evo.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Evo.Infrastructure.Persistence.Configurations
 {
@@ -22,7 +17,7 @@ namespace Evo.Infrastructure.Persistence.Configurations
 
             // Relationships
             builder.HasOne(c => c.User)
-                   .WithOne(u => u.Customer) // assuming User has navigation property `Customer`
+                   .WithOne(u => u.Customer)
                    .HasForeignKey<Customer>(c => c.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
 
@@ -40,38 +35,45 @@ namespace Evo.Infrastructure.Persistence.Configurations
 
             builder.Property(c => c.Phone)
                    .HasMaxLength(20)
-                   .IsRequired();
+                   .IsRequired(false);  // Explicitly optional
 
             builder.Property(c => c.Email)
                    .HasMaxLength(100)
                    .IsRequired();
 
             builder.Property(c => c.AddressLine1)
-                   .HasMaxLength(200);
+                   .HasMaxLength(200)
+                   .IsRequired(false);
 
             builder.Property(c => c.AddressLine2)
-                   .HasMaxLength(200);
+                   .HasMaxLength(200)
+                   .IsRequired(false);
 
             builder.Property(c => c.City)
-                   .HasMaxLength(100);
+                   .HasMaxLength(100)
+                   .IsRequired(false);
 
             builder.Property(c => c.District)
-                   .HasMaxLength(100);
+                   .HasMaxLength(100)
+                   .IsRequired(false);
 
             builder.Property(c => c.PostalCode)
-                   .HasMaxLength(20);
+                   .HasMaxLength(20)
+                   .IsRequired(false);
 
             builder.Property(c => c.Country)
-                   .HasMaxLength(100);
+                   .HasMaxLength(100)
+                   .IsRequired(false);
 
             builder.Property(c => c.Status)
-                   .HasConversion<string>() // Store enum as string for readability
+                   .HasConversion<string>()
                    .HasMaxLength(20)
                    .IsRequired()
                    .HasDefaultValue(AccountStatus.Active);
 
             builder.Property(c => c.DateOfBirth)
-                   .HasColumnType("date");
+                   .HasColumnType("date")
+                   .IsRequired(false);
 
             builder.Property(c => c.IsEmailVerified)
                    .HasDefaultValue(false);
@@ -89,12 +91,6 @@ namespace Evo.Infrastructure.Persistence.Configurations
             // Indexes
             builder.HasIndex(c => c.Email)
                    .IsUnique();
-
-
-
-            // Optional: if you store JSON or extra metadata later
-            // builder.Property(c => c.Metadata)
-            //        .HasColumnType("jsonb");
         }
     }
 }

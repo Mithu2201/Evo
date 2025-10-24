@@ -27,8 +27,11 @@ namespace Evo.Infrastructure
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IThirdPartyDriverRepository, ThirdPartyDriverRepository>();
+
             // ✅ Register security services
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 
             // Register UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();

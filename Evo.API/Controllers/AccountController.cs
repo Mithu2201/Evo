@@ -4,6 +4,7 @@ using Evo.API.Models.Requests.Accounts;
 using Evo.Application.Features.Accounts.Commands.RegisterAdminUser;
 using Evo.Application.Features.Accounts.Commands.RegisterCustomerUser;
 using Evo.Application.Features.Accounts.Commands.RegisterStaffUser;
+using Evo.Application.Features.Accounts.Commands.GoogleLogin;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
@@ -24,5 +25,13 @@ namespace Evo.API.Controllers
         }
         
         
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin(GoogleLoginApiRequest request) // POST /api/account/google-login //http://localhost:5077/api/account/google-login
+        {
+            var command = _mapper.Map<GoogleLoginCommand>(request);
+            var userDto = await _mediator.Send(command);
+            return this.ToApiResponse(userDto, "Google sign-in successful");
+        }
     }
 }
