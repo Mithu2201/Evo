@@ -67,7 +67,7 @@ namespace Evo.API.Models.Requests.Accounts
         /// <summary>
         /// Job-related details.
         /// </summary>
-        public String Position { get; set; }
+        public StaffPosition Position { get; set; }
         public string? Department { get; set; }
 
         /// <summary>
