@@ -26,8 +26,13 @@ namespace Evo.Infrastructure.Persistence.Repositories
         {
             return await _context.Users
                 .Include(u => u.Customer)
+                .Include(u => u.ServiceProvider)
+                .Include(u => u.Staff)
+                    .ThenInclude(s => s.Admin) // if Staff has an Admin navigation
+                .Include(u => u.ThirdPartyDriver)
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
+
 
 
         public async Task<List<User>> GetAllUsersAsync()
