@@ -11,7 +11,19 @@ namespace Evo.Application.Contracts.Persistence
     public interface ICustomerRepository
     {
         Task AddAsync(Customer customer);
-        Task<Customer?> GetByIdAsync(int id);
+        // 🔍 Get customer by ID (excluding soft-deleted)
+        Task<Customer?> GetByIdAsync(string id);
+
+        // 📋 Get all active customers
         Task<IEnumerable<Customer>> GetAllAsync();
+
+        // ✏️ Update existing customer
+        Task UpdateAsync(Customer customer);
+
+        // 🗑️ Soft delete customer
+        Task SoftDeleteAsync(string id);
+
+        // 💾 Commit changes
+        Task SaveChangesAsync();
     }
 }
