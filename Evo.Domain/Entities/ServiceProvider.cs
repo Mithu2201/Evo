@@ -12,7 +12,7 @@ namespace Evo.Domain.Entities
     public class ServiceProvider
     {
         [Key]
-        public Guid ServiceProviderId { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required, ForeignKey(nameof(User))]
 		//public int UserId { get; set; }
@@ -47,7 +47,7 @@ namespace Evo.Domain.Entities
         [StringLength(20)] public string? PostalCode { get; set; }
         [StringLength(100)] public string? Country { get; set; }
 
-        public int MaxConcurrentBookings { get; set; } 
+        public int MaxConcurrentBookings { get; set; }
         public int MinLeadTimeDays { get; set; } = 3;
         public int BookingWindowDays { get; set; } = 90;
 
@@ -66,7 +66,7 @@ namespace Evo.Domain.Entities
         public string CancellationPolicy { get; set; } = "{}";
         public string PaymentMethods { get; set; } = "[]";
 
-    
+
 
         // Navigation
         //public virtual ICollection<ServiceProviderServiceCategory> ServiceProviderCategories { get; set; } = new HashSet<ServiceProviderServiceCategory>();

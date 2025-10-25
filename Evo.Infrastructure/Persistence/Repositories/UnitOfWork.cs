@@ -16,14 +16,21 @@ namespace Evo.Infrastructure.Persistence.Repositories
         public IUserRepository Users { get; }
         public ICustomerRepository Customers { get; }
         public IThirdPartyDriverRepository ThirdPartyDrivers { get; }
+        public IServiceProviderRepository ServiceProviders { get; } 
+
+        public IStaffRepository Staffs { get; }
+        public IAdminRepository Admins { get; }
 
         //Constructor
-        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers, IThirdPartyDriverRepository thirdPartyDrivers)
+        public UnitOfWork(AppDbContext context, IUserRepository users, ICustomerRepository customers, IStaffRepository staffs, IAdminRepository admins, IThirdPartyDriverRepository thirdPartyDrivers, IServiceProviderRepository serviceProviders)
         {
             _context = context;
             Users = users;
             Customers = customers;
+            Staffs = staffs;
+            Admins = admins;
             ThirdPartyDrivers = thirdPartyDrivers;
+            ServiceProviders = serviceProviders;
         }
 
         // Start transaction

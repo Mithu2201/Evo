@@ -13,3 +13,4 @@ namespace Evo.Application.Features.Accounts.Commands.RegisterCustomerUser
         public required RegisterCustomerUserDto RegisterCustomerUserDto { get; set; }
     }
 }
+ 

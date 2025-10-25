@@ -27,7 +27,7 @@ namespace Evo.Domain.Entities
         // Prefer E.164 (e.g., +9477xxxxxxx). Loosen if you support local formatting.
         [RegularExpression(@"^\+?[1-9]\d{7,14}$",
             ErrorMessage = "Phone must be in international format (E.164), e.g. +9477xxxxxxx.")]
-        public string Phone { get; set; } = default!;
+        public string? Phone { get; set; } = default!;
 
         [Required, EmailAddress, StringLength(100)]
         public string Email { get; set; } = default!;

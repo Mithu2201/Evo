@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Evo.Application.Features.Accounts.Commands.RegisterServiceProviderUser
+namespace Evo.Application.Features.Accounts.Commands.RegisterStaffUser
 {
-    public class RegisterCustomerUserCommandHandler
+    internal class RegisterStaffUserValidator
     {
     }
 }

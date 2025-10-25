@@ -24,8 +24,15 @@ namespace Evo.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            return await _context.Users
+                .Include(u => u.Customer)
+                .Include(u => u.ServiceProvider)
+                .Include(u => u.Staff)
+                    .ThenInclude(s => s.Admin) // if Staff has an Admin navigation
+                .Include(u => u.ThirdPartyDriver)
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
+
 
 
         public async Task<List<User>> GetAllUsersAsync()
@@ -36,6 +43,13 @@ namespace Evo.Infrastructure.Persistence.Repositories
         public async Task<User?> GetUserByIdAsync(string id)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        // ✅ New UpdateAsync method
+        public async Task UpdateAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
         }
 
 
