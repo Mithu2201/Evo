@@ -2,15 +2,8 @@
 using Evo.Application.Contracts.Persistence;
 using Evo.Application.Contracts.Security;
 using Evo.Application.Features.Accounts.Dtos;
-using Evo.Application.Features.Accounts.Events.Notification;
 using Evo.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Evo.Application.Features.Accounts.Commands.RegisterCustomerUser
 {
@@ -38,13 +31,13 @@ namespace Evo.Application.Features.Accounts.Commands.RegisterCustomerUser
 
                 // 5️ Add corresponding customer
 
-                var customerEventDto = _mapper.Map<CustomerUserRegisteredDto>(request.RegisterCustomerUserDto);
-                customerEventDto.UserId = user.Id;
-
-                await _mediator.Publish(new CustomerUserRegisteredEvent(customerEventDto), cancellationToken);
 
 
+               
 
+                var customer = _mapper.Map<Customer>(request.RegisterCustomerUserDto);
+                customer.UserId = user.Id;
+                await _unitOfWork.Customers.AddAsync(customer);
 
 
 

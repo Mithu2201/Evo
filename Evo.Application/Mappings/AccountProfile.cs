@@ -38,27 +38,25 @@ namespace Evo.Application.Mappings
                    dest.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(src.Password));
                });
 
-            // Map RegisterCustomerUserDto -> CustomerUserRegisteredDto
-            CreateMap<RegisterCustomerUserDto, CustomerUserRegisteredDto>()
+ 
+
+            // Map from DTO -> Customer entity
+            CreateMap<RegisterCustomerUserDto, Customer>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CustomerName))
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.CustomerPhone))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(_ => AccountStatus.Active))
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
                 .ForMember(dest => dest.AddressLine1, opt => opt.MapFrom(src => src.AddressLine1))
                 .ForMember(dest => dest.AddressLine2, opt => opt.MapFrom(src => src.AddressLine2))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
                 .ForMember(dest => dest.District, opt => opt.MapFrom(src => src.District))
                 .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.PostalCode))
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
-                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
-                .ForMember(dest => dest.IsEmailVerified, opt => opt.Ignore())
-                .ForMember(dest => dest.IsPhoneVerified, opt => opt.Ignore());
-
-
-            CreateMap<CustomerUserRegisteredDto, Customer>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(_ => AccountStatus.Active))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore());
+                .ForMember(dest => dest.User, opt => opt.Ignore()) // will be linked after user creation
+                .ForMember(dest => dest.UserId, opt => opt.Ignore()); // set later in handler
 
         }
 
