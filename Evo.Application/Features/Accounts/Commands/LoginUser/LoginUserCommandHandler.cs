@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Evo.Application.Features.Accounts.Commands.LoginUser
 {
-    public class LoginUserCommandHandler(IUserRepository _userRepository, ITokenService _tokenService, IMapper _mapper) : IRequestHandler<LoginUserCommand, UserDto>
+    public class LoginUserCommandHandler(IUserRepository _userRepository,IStaffRepository staffRepository,ITokenService _tokenService, IMapper _mapper) : IRequestHandler<LoginUserCommand, UserDto>
     {
  
 
@@ -33,18 +33,21 @@ namespace Evo.Application.Features.Accounts.Commands.LoginUser
             // 4️⃣ Determine role dynamically for JWT / UserDto
             string role;
 
-            if (user.RolePermissions == Evo.Domain.Enums.UserRole.Admin)
+
+
+            if (user.RolePermissions == UserRole.Admin)
             {
-                // Check navigation property to see if staff is superadmin
-                if (user.Staff?.Admin != null)
+                // Await the async method to get the actual Staff object
+                var staff = await staffRepository.GetStaffByUserIdAsync(user.Id);
+
+                if (staff != null && staff.Admin != null)
                 {
-                    role = user.Staff.Admin.Position == AdminPosition.SuperAdmin
-                        ? "SuperAdmin"
-                        : "Admin";
+                    // Check Admin navigation property
+                    role = staff.Admin.Position == AdminPosition.SuperAdmin ? "SuperAdmin" : "Admin";
                 }
                 else
                 {
-                    // fallback
+                    // Staff exists but no Admin, or staff not found
                     role = "Admin";
                 }
             }
@@ -53,6 +56,7 @@ namespace Evo.Application.Features.Accounts.Commands.LoginUser
                 // Other roles (Customer, ServiceProvider, ThirdPartyDriver)
                 role = user.RolePermissions.ToString();
             }
+
 
             // 5️⃣ Map to UserDto and generate token
             var dto = new UserDto

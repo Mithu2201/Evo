@@ -252,9 +252,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(36)");
-
                     b.Property<int>("VerificationStatus")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -270,10 +267,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId")
                         .IsUnique();
-
-                    b.HasIndex("UserId1")
-                        .IsUnique()
-                        .HasFilter("[UserId1] IS NOT NULL");
 
                     b.ToTable("ServiceProviders", null, t =>
                         {
@@ -379,9 +372,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(36)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -390,10 +380,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId")
                         .IsUnique();
-
-                    b.HasIndex("UserId1")
-                        .IsUnique()
-                        .HasFilter("[UserId1] IS NOT NULL");
 
                     b.ToTable("Staff", null, t =>
                         {
@@ -499,9 +485,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(36)");
-
                     b.Property<string>("VehiclePlateNo")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
@@ -527,11 +510,9 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.HasIndex("PhoneE164")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1")
+                    b.HasIndex("UserId")
                         .IsUnique()
-                        .HasFilter("[UserId1] IS NOT NULL");
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.HasIndex("VehiclePlateNo");
 
@@ -620,14 +601,10 @@ namespace Evo.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Evo.Domain.Entities.ServiceProvider", b =>
                 {
                     b.HasOne("Evo.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("ServiceProvider")
+                        .HasForeignKey("Evo.Domain.Entities.ServiceProvider", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("Evo.Domain.Entities.User", null)
-                        .WithOne("ServiceProvider")
-                        .HasForeignKey("Evo.Domain.Entities.ServiceProvider", "UserId1");
 
                     b.Navigation("User");
                 });
@@ -635,14 +612,10 @@ namespace Evo.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Evo.Domain.Entities.Staff", b =>
                 {
                     b.HasOne("Evo.Domain.Entities.User", "User")
-                        .WithOne()
-                        .HasForeignKey("Evo.Domain.Entities.Staff", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Evo.Domain.Entities.User", null)
                         .WithOne("Staff")
-                        .HasForeignKey("Evo.Domain.Entities.Staff", "UserId1");
+                        .HasForeignKey("Evo.Domain.Entities.Staff", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -650,13 +623,9 @@ namespace Evo.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Evo.Domain.Entities.ThirdPartyDriver", b =>
                 {
                     b.HasOne("Evo.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Evo.Domain.Entities.User", null)
                         .WithOne("ThirdPartyDriver")
-                        .HasForeignKey("Evo.Domain.Entities.ThirdPartyDriver", "UserId1");
+                        .HasForeignKey("Evo.Domain.Entities.ThirdPartyDriver", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
                 });
@@ -668,17 +637,13 @@ namespace Evo.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Evo.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Customer")
-                        .IsRequired();
+                    b.Navigation("Customer");
 
-                    b.Navigation("ServiceProvider")
-                        .IsRequired();
+                    b.Navigation("ServiceProvider");
 
-                    b.Navigation("Staff")
-                        .IsRequired();
+                    b.Navigation("Staff");
 
-                    b.Navigation("ThirdPartyDriver")
-                        .IsRequired();
+                    b.Navigation("ThirdPartyDriver");
                 });
 #pragma warning restore 612, 618
         }

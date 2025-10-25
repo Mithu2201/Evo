@@ -67,7 +67,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
                 name: "ServiceProviders",
                 columns: table => new
                 {
-                    ServiceProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(36)", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     BrandName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
@@ -92,12 +92,11 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CancellationPolicy = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "{}"),
-                    PaymentMethods = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "[]"),
-                    UserId1 = table.Column<string>(type: "nvarchar(36)", nullable: true)
+                    PaymentMethods = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "[]")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceProviders", x => x.ServiceProviderId);
+                    table.PrimaryKey("PK_ServiceProviders", x => x.Id);
                     table.CheckConstraint("CK_ServiceProvider_BookingWindowDays", "[BookingWindowDays] >= 0");
                     table.CheckConstraint("CK_ServiceProvider_CreditPeriod", "[CreditPeriod] >= 0");
                     table.CheckConstraint("CK_ServiceProvider_MaxConcurrentBookings", "[MaxConcurrentBookings] >= 0");
@@ -108,11 +107,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ServiceProviders_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -138,8 +132,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     Status = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     Permissions = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId1 = table.Column<string>(type: "nvarchar(36)", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,12 +143,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Staff_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id");
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,8 +177,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    UserId1 = table.Column<string>(type: "nvarchar(36)", nullable: true)
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,11 +188,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ThirdPartyDrivers_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -265,24 +247,10 @@ namespace Evo.Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceProviders_UserId1",
-                table: "ServiceProviders",
-                column: "UserId1",
-                unique: true,
-                filter: "[UserId1] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Staff_UserId",
                 table: "Staff",
                 column: "UserId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Staff_UserId1",
-                table: "Staff",
-                column: "UserId1",
-                unique: true,
-                filter: "[UserId1] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UX_Staff_Email",
@@ -309,14 +277,9 @@ namespace Evo.Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ThirdPartyDrivers_UserId",
                 table: "ThirdPartyDrivers",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ThirdPartyDrivers_UserId1",
-                table: "ThirdPartyDrivers",
-                column: "UserId1",
+                column: "UserId",
                 unique: true,
-                filter: "[UserId1] IS NOT NULL");
+                filter: "[UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ThirdPartyDrivers_VehiclePlateNo",

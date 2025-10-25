@@ -26,9 +26,9 @@ namespace Evo.Infrastructure.Persistence.Configurations
 
             // Relationships
             builder.HasOne(sp => sp.User)
-                   .WithMany() // If User has navigation: .WithOne(u => u.ServiceProvider)
-                   .HasForeignKey(sp => sp.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);
+              .WithOne(u => u.ServiceProvider)
+              .HasForeignKey<ServiceProvider>(sp => sp.UserId)
+              .OnDelete(DeleteBehavior.Restrict);
 
             // Indexes / Uniqueness
             builder.HasIndex(sp => sp.UserId).IsUnique(); // one ServiceProvider per User

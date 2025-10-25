@@ -106,6 +106,12 @@ namespace Evo.Infrastructure.Persistence.Configurations
                    .HasForeignKey<Admin>(a => a.StaffId)
                    .OnDelete(DeleteBehavior.Cascade);
 
+
+            builder.HasOne(s => s.User)
+                   .WithOne(u => u.Staff)
+                   .HasForeignKey<Staff>(s => s.UserId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

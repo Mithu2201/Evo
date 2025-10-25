@@ -65,9 +65,9 @@ namespace Evo.Infrastructure.Persistence.Configurations
                    .IsRowVersion();
 
             builder.HasOne(d => d.User)
-                   .WithMany()
-                   .HasForeignKey(d => d.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                    .WithOne(u => u.ThirdPartyDriver)
+                    .HasForeignKey<ThirdPartyDriver>(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             // Soft-delete global filter
             builder.HasQueryFilter(d => !d.IsDeleted);

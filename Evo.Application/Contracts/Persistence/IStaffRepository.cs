@@ -12,5 +12,7 @@ namespace Evo.Application.Contracts.Persistence
         Task AddAsync(Staff satff);
         Task<Staff?> GetByIdAsync(string id);
         Task<IEnumerable<Staff>> GetAllAsync();
+
+        Task<Staff?> GetStaffByUserIdAsync(string userId); // New method
     }
 }

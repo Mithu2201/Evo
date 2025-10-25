@@ -19,5 +19,13 @@ namespace Evo.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Staff>> GetAllAsync() =>
             await _context.Staffs.ToListAsync();
+
+        public async Task<Staff?> GetStaffByUserIdAsync(string userId)
+        {
+            return await _context.Staffs
+                .Include(s => s.User)
+                .Include(s => s.Admin)
+                .FirstOrDefaultAsync(s => s.UserId == userId);
+        }
     }
 }
