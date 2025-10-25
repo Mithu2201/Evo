@@ -1,50 +1,69 @@
 ﻿using AutoMapper;
 using Evo.Application.Contracts.Persistence;
-using Evo.Application.Features.ThirdPartyDrivers.ViewModels;
+using Evo.Application.Features.ThirdPartyDrivers.Dtos;
 using Evo.Domain.Entities;
+using Evo.Domain.Enums;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Evo.Application.Features.ThirdPartyDrivers.Commands.Create
 {
-    public class CreateThirdPartyDriverCommandHandler : IRequestHandler<CreateThirdPartyDriverCommand, ThirdPartyDriverVm>
+    public class CreateThirdPartyDriverCommandHandler : IRequestHandler<CreateThirdPartyDriverCommand, ThirdPartyDriverDto>
     {
-        private readonly IThirdPartyDriverRepository _repo;
-        private readonly IUserRepository _users;
+        private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public CreateThirdPartyDriverCommandHandler(
-            IThirdPartyDriverRepository repo,
-            IUserRepository users,
-            IMapper mapper)
+        public CreateThirdPartyDriverCommandHandler(IUnitOfWork uow, IMapper mapper)
         {
-            _repo = repo;
-            _users = users;
+            _uow = uow;
             _mapper = mapper;
         }
 
-        public async Task<ThirdPartyDriverVm> Handle(CreateThirdPartyDriverCommand request, CancellationToken cancellationToken)
+        public async Task<ThirdPartyDriverDto> Handle(CreateThirdPartyDriverCommand request, CancellationToken cancellationToken)
         {
-            var entity = _mapper.Map<ThirdPartyDriver>(request.Driver);
+            await _uow.BeginTransactionAsync();
 
-            // Validate optional UserId to avoid FK violation
-            if (!string.IsNullOrWhiteSpace(entity.UserId))
+            try
             {
-                var user = await _users.GetUserByIdAsync(entity.UserId);
-                if (user is null)
-                {
-                    // If the provided UserId doesn't exist, unlink the driver to prevent FK constraint errors
-                    entity.UserId = null;
-                }
-            }
+                var entity = _mapper.Map<ThirdPartyDriver>(request.Driver);
 
-            await _repo.AddAsync(entity, cancellationToken);
-            var dto = _mapper.Map<Evo.Application.Features.ThirdPartyDrivers.Dtos.ThirdPartyDriverDto>(entity);
-            return new ThirdPartyDriverVm { Driver = dto };
+                // If a UserId is provided but doesn't exist, create a new User based on driver details
+                if (!string.IsNullOrWhiteSpace(entity.UserId))
+                {
+                    var existing = await _uow.Users.GetUserByIdAsync(entity.UserId);
+                    if (existing is null)
+                    {
+                        // Create minimal User record for this driver
+                        var user = new User
+                        {
+                            Email = entity.WorkEmail,
+                            RolePermissions = UserRole.ThirdParty,
+                            IsActive = true,
+                        };
+
+                        // Generate a temporary random password (the driver should reset it later)
+                        var tempPassword = $"Drv-{Guid.NewGuid():N}!Aa1";
+                        using var hmac = new HMACSHA512();
+                        user.PasswordSalt = hmac.Key;
+                        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(tempPassword));
+
+                        await _uow.Users.AddAsync(user);
+                        // link newly created user to driver (override provided id to ensure validity)
+                        entity.UserId = user.Id;
+                    }
+                }
+
+                await _uow.ThirdPartyDrivers.AddAsync(entity, cancellationToken);
+                await _uow.CommitTransactionAsync();
+
+                return _mapper.Map<ThirdPartyDriverDto>(entity);
+            }
+            catch
+            {
+                await _uow.RollbackTransactionAsync();
+                throw;
+            }
         }
     }
 }

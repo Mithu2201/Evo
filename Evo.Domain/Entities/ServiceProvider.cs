@@ -15,7 +15,8 @@ namespace Evo.Domain.Entities
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required, ForeignKey(nameof(User))]
-        public string UserId { get; set; }
+		//public int UserId { get; set; }
+		public string UserId { get; set; } = null!; // Match User.Id (string GUID)
         public virtual User User { get; set; } = null!;
 
         [Required, MaxLength(200)]

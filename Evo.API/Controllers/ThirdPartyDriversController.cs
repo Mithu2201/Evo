@@ -21,12 +21,12 @@ namespace Evo.API.Controllers
         [HttpPost("createthirdpartydriver")]
         public async Task<IActionResult> Create([FromBody] CreateThirdPartyDriverDto dto, CancellationToken ct)    //http://localhost:5077/api/thirdparty-drivers/createthirdpartydriver
         {
-            var result = await _mediator.Send(new CreateThirdPartyDriverCommand(dto), ct);
-            return this.ToApiResponse(result.Driver, "Driver created");
+            var created = await _mediator.Send(new CreateThirdPartyDriverCommand(dto), ct);
+            return this.ToApiResponse(created, "Driver created");
         }
 
-        [HttpGet("{driverId:guid}")]
-        public async Task<IActionResult> GetById([FromRoute] Guid driverId, CancellationToken ct)
+        [HttpGet("{driverId:guid}")]                                                                               //http://localhost:5077/api/thirdparty-drivers/{driverId:guid}
+		public async Task<IActionResult> GetById([FromRoute] Guid driverId, CancellationToken ct)
         {
             var dto = await _mediator.Send(new GetThirdPartyDriverByIdQuery(driverId), ct);
             if (dto is null) return this.ToErrorResponse("Not found", 404);

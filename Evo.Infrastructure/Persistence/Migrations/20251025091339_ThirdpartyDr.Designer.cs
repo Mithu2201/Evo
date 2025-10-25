@@ -4,6 +4,7 @@ using Evo.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evo.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025091339_ThirdpartyDr")]
+    partial class ThirdpartyDr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,33 +24,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Evo.Domain.Entities.Admin", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StaffId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StaffId")
-                        .IsUnique();
-
-                    b.ToTable("Admins", (string)null);
-                });
 
             modelBuilder.Entity("Evo.Domain.Entities.Customer", b =>
                 {
@@ -104,6 +80,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -204,8 +181,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsEmailVerified")
                         .ValueGeneratedOnAdd()
@@ -218,7 +194,9 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<int>("MaxConcurrentBookings")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("MinLeadTimeDays")
                         .ValueGeneratedOnAdd()
@@ -242,8 +220,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("TaxId")
                         .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -252,139 +229,26 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<int>("VerificationStatus")
+                    b.Property<string>("VerificationStatus")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValue("Pending");
 
-                    b.HasKey("Id");
+                    b.HasKey("ServiceProviderId");
+
+                    b.HasIndex("BrandName");
+
+                    b.HasIndex("CompanyName");
 
                     b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Phone")
                         .IsUnique();
 
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ServiceProviders", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_ServiceProvider_BookingWindowDays", "[BookingWindowDays] >= 0");
-
-                            t.HasCheckConstraint("CK_ServiceProvider_CreditPeriod", "[CreditPeriod] >= 0");
-
-                            t.HasCheckConstraint("CK_ServiceProvider_MaxConcurrentBookings", "[MaxConcurrentBookings] >= 0");
-
-                            t.HasCheckConstraint("CK_ServiceProvider_MinLeadTimeDays", "[MinLeadTimeDays] >= 0");
-                        });
-                });
-
-            modelBuilder.Entity("Evo.Domain.Entities.Staff", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
-
-                    b.Property<string>("AddressLine1")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("AddressLine2")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("City")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("Department")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("District")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("HireDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Permissions")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("PostalCode")
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("UX_Staff_Email");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Staff", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Staff_Phone_Length", "LEN([Phone]) BETWEEN 7 AND 20");
-                        });
+                    b.ToTable("ServiceProviders", (string)null);
                 });
 
             modelBuilder.Entity("Evo.Domain.Entities.ThirdPartyDriver", b =>
@@ -510,9 +374,7 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.HasIndex("PhoneE164")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("UserId");
 
                     b.HasIndex("VehiclePlateNo");
 
@@ -531,12 +393,15 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(36)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(100)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -558,8 +423,8 @@ namespace Evo.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("RolePermissions")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -570,21 +435,16 @@ namespace Evo.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UX_Users_Email");
 
-                    b.HasIndex("IsActive", "RolePermissions")
-                        .HasDatabaseName("IX_Users_IsActive_Role");
+                    b.ToTable("Users", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Users_Email_Len", "LEN([Email]) BETWEEN 5 AND 100");
 
-                    b.ToTable("Users", (string)null);
-                });
+                            t.HasCheckConstraint("CK_Users_Id_Len", "LEN([Id]) = 36");
 
-            modelBuilder.Entity("Evo.Domain.Entities.Admin", b =>
-                {
-                    b.HasOne("Evo.Domain.Entities.Staff", "Staff")
-                        .WithOne("Admin")
-                        .HasForeignKey("Evo.Domain.Entities.Admin", "StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            t.HasCheckConstraint("CK_Users_PasswordHash_Len", "DATALENGTH([PasswordHash]) BETWEEN 20 AND 512");
 
-                    b.Navigation("Staff");
+                            t.HasCheckConstraint("CK_Users_PasswordSalt_Len", "DATALENGTH([PasswordSalt]) BETWEEN 16 AND 128");
+                        });
                 });
 
             modelBuilder.Entity("Evo.Domain.Entities.Customer", b =>
@@ -592,28 +452,6 @@ namespace Evo.Infrastructure.Persistence.Migrations
                     b.HasOne("Evo.Domain.Entities.User", "User")
                         .WithOne("Customer")
                         .HasForeignKey("Evo.Domain.Entities.Customer", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Evo.Domain.Entities.ServiceProvider", b =>
-                {
-                    b.HasOne("Evo.Domain.Entities.User", "User")
-                        .WithOne("ServiceProvider")
-                        .HasForeignKey("Evo.Domain.Entities.ServiceProvider", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Evo.Domain.Entities.Staff", b =>
-                {
-                    b.HasOne("Evo.Domain.Entities.User", "User")
-                        .WithOne("Staff")
-                        .HasForeignKey("Evo.Domain.Entities.Staff", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -634,27 +472,20 @@ namespace Evo.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Evo.Domain.Entities.ThirdPartyDriver", b =>
                 {
                     b.HasOne("Evo.Domain.Entities.User", "User")
-                        .WithOne("ThirdPartyDriver")
-                        .HasForeignKey("Evo.Domain.Entities.ThirdPartyDriver", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Evo.Domain.Entities.Staff", b =>
-                {
-                    b.Navigation("Admin");
-                });
-
             modelBuilder.Entity("Evo.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Customer");
+                    b.Navigation("Customer")
+                        .IsRequired();
 
-                    b.Navigation("ServiceProvider");
-
-                    b.Navigation("Staff");
-
-                    b.Navigation("ThirdPartyDriver");
+                    b.Navigation("ServiceProvider")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
