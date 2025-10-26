@@ -78,7 +78,7 @@ namespace Evo.Application.Features.Accounts.Commands.GoogleLogin
             }
 
             var userDto = _mapper.Map<UserDto>(user);
-            userDto.Token = _tokenService.CreateToken(user);
+            userDto.Token = _tokenService.CreateToken(user,user.RolePermissions.ToString());
             return userDto;
         }
     }

@@ -65,7 +65,7 @@ namespace Evo.Application.Features.Accounts.Commands.LoginUser
                 DisplayName = user.DisplayName, // dynamically resolved from navigation
                 Email = user.Email,
                 Role = role,
-                Token = _tokenService.CreateToken(user) // token should include this role claim
+                Token = _tokenService.CreateToken(user,role) // token should include this role claim
             };
 
             return dto;

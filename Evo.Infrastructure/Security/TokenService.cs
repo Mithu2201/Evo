@@ -19,7 +19,7 @@ namespace Evo.Infrastructure.Security
             _config = config;
         }
 
-        public string CreateToken(User user)
+        public string CreateToken(User user, string role)
         {
             var tokenKey = _config["TokenKey"];
             if (string.IsNullOrWhiteSpace(tokenKey))
@@ -35,7 +35,7 @@ namespace Evo.Infrastructure.Security
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.RolePermissions.ToString()),
+                new Claim(ClaimTypes.Role, role), // use the role passed here
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.DisplayName)
             };
 

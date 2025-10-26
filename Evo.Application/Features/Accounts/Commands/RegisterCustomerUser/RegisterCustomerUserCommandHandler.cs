@@ -47,7 +47,7 @@ namespace Evo.Application.Features.Accounts.Commands.RegisterCustomerUser
 
                 // 7️ Map to DTO and create token
                 var userDto = _mapper.Map<UserDto>(user);
-                userDto.Token = _tokenService.CreateToken(user);
+                userDto.Token = _tokenService.CreateToken(user,user.RolePermissions.ToString());
 
                 return userDto;
             }
